@@ -12,14 +12,18 @@ module.exports = {
   },
   module: {
     loaders: [
-      // {
-      //   test: /\.scss$/,
-      //   loader: 'style-loader!css-loader?modules&localIdentName=[local]__[hash:base64:5]!postcss-loader!sass-loader',
-      // },
-      {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&localIdentName=[local]__[hash:base64:5]!postcss-loader!sass-loader'),
-      },
+      (() => {
+        if (process.env.inlineCSSInJS) {
+          return {
+            test: /\.scss$/,
+            loader: 'style-loader!css-loader?modules&localIdentName=[local]__[hash:base64:5]!postcss-loader!sass-loader',
+          };
+        }
+        return {
+          test: /\.scss$/,
+          loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&localIdentName=[local]__[hash:base64:5]!postcss-loader!sass-loader'),
+        };
+      })(),
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
